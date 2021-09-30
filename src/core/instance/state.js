@@ -299,7 +299,7 @@ function createWatcher(
   handler,
   options
 ) {
-  // {handler: '', deep...}
+  // {handler: '', deep...}形式
   if (isPlainObject(handler)) {
     options = handler
     handler = handler.handler
@@ -336,6 +336,12 @@ export function stateMixin(Vue) {
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
 
+  /** 
+   * javascript comment 
+   * @Author: 王林25 
+   * @Date: 2021-09-30 10:07:46 
+   * @Desc: 观察实例上的数据 
+   */
   Vue.prototype.$watch = function (
     expOrFn,
     cb,
@@ -349,6 +355,7 @@ export function stateMixin(Vue) {
     options = options || {}
     options.user = true
     const watcher = new Watcher(vm, expOrFn, cb, options)
+    // 指定了immediate为true，那么立刻执行一次回调
     if (options.immediate) {
       try {
         cb.call(vm, watcher.value)
@@ -356,6 +363,7 @@ export function stateMixin(Vue) {
         handleError(error, vm, `callback for immediate watcher "${watcher.expression}"`)
       }
     }
+    // 返回一个用于解除观察的方法
     return function unwatchFn() {
       watcher.teardown()
     }
