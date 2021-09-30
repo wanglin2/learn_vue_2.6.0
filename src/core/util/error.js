@@ -5,6 +5,12 @@ import { warn } from './debug'
 import { inBrowser, inWeex } from './env'
 import { isPromise } from '../../shared/util'
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 13:57:16 
+ * @Desc: 错误处理 
+ */
 export function handleError (err, vm, info) {
   if (vm) {
     let cur = vm
@@ -25,6 +31,12 @@ export function handleError (err, vm, info) {
   globalHandleError(err, vm, info)
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 13:42:41 
+ * @Desc: 带错误捕捉的执行函数 
+ */
 export function invokeWithErrorHandling (
   handler,
   context,
@@ -44,7 +56,14 @@ export function invokeWithErrorHandling (
   return res
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 13:53:37 
+ * @Desc: 全局处理错误 
+ */
 function globalHandleError (err, vm, info) {
+  // 如果用户配置了自定义的错误捕捉函数，则执行用户定义的
   if (config.errorHandler) {
     try {
       return config.errorHandler.call(null, err, vm, info)
@@ -55,11 +74,13 @@ function globalHandleError (err, vm, info) {
   logError(err, vm, info)
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 13:55:22 
+ * @Desc: 打印错误日志 
+ */
 function logError (err, vm, info) {
-  if (process.env.NODE_ENV !== 'production') {
-    warn(`Error in ${info}: "${err.toString()}"`, vm)
-  }
-  /* istanbul ignore else */
   if ((inBrowser || inWeex) && typeof console !== 'undefined') {
     console.error(err)
   } else {

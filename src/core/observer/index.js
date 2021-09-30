@@ -21,8 +21,7 @@ import {
 const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 
 /**
- * In some cases we may want to disable observation inside a component's
- * update computation.
+ * 在某些情况下，我们可能希望禁用组件更新计算中的观察。
  */
 export let shouldObserve = true
 
@@ -155,7 +154,7 @@ export function defineReactive(
   // 保存属性原有的set和get
   const getter = property && property.get
   const setter = property && property.set
-  // 如果没有传递val
+  // 如果没有传递val，且getter不存在或setter存在，那么val取当前对象上的值
   if ((!getter || setter) && arguments.length === 2) {
     val = obj[key]
   }
@@ -182,10 +181,6 @@ export function defineReactive(
       /* eslint-disable no-self-compare */
       if (newVal === value || (newVal !== newVal && value !== value)) {
         return
-      }
-      /* eslint-enable no-self-compare */
-      if (process.env.NODE_ENV !== 'production' && customSetter) {
-        customSetter()
       }
       // #7981: for accessor properties without setter
       if (getter && !setter) return

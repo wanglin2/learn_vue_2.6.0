@@ -28,13 +28,6 @@ export function initGlobalAPI (Vue) {
   // 添加配置项config
   const configDef = {}
   configDef.get = () => config
-  if (process.env.NODE_ENV !== 'production') {
-    configDef.set = () => {
-      warn(
-        'Do not replace the Vue.config object, set individual fields instead.'
-      )
-    }
-  }
   Object.defineProperty(Vue, 'config', configDef)
 
   // 暴露工具方法
@@ -56,14 +49,13 @@ export function initGlobalAPI (Vue) {
     return obj
   }
 
-  // 添加了一个选项对象，并添加了三个属性，就是我们熟悉的`component`、`directives`、`filters`
+  // 添加了一个选项对象，并添加了三个属性，就是我们熟悉的`components`、`directives`、`filters`
   Vue.options = Object.create(null)
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })
 
-  // this is used to identify the "base" constructor to extend all plain-object
-  // components with in Weex's multi-instance scenarios.
+  // 这用于标识“基本”构造函数，以在Weex的多实例场景中扩展所有普通对象组件。
   Vue.options._base = Vue
 
   // 挂载keep-alive组件

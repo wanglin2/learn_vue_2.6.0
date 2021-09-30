@@ -35,10 +35,17 @@ export function setActiveInstance(vm) {
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 10:26:17 
+ * @Desc: 初始化生命周期 
+ */
 export function initLifecycle (vm) {
   const options = vm.$options
 
-  // 定位第一个非抽象父级
+  // 找到第一个非抽象的父级，然后将该实例添加到其$children属性中，这样我们就可以在父级上通过该属性找到它的子组件
+  // 抽象组件有transition、keep-alive
   let parent = options.parent
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
@@ -47,10 +54,13 @@ export function initLifecycle (vm) {
     parent.$children.push(vm)
   }
 
+  // 关联父组件
   vm.$parent = parent
+  // 当前组件树的根vue实例，如果没有父实例，那么就是自己
   vm.$root = parent ? parent.$root : vm
-
+  // 当前实例的直接子组件
   vm.$children = []
+  // dom元素和组件实例
   vm.$refs = {}
 
   vm._watcher = null
@@ -341,8 +351,14 @@ export function deactivateChildComponent (vm, direct) {
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 11:40:50 
+ * @Desc: 触发生命周期 
+ */
 export function callHook (vm, hook) {
-  // #7573 disable dep collection when invoking lifecycle hooks
+  // #7573 调用生命周期钩子时禁止依赖收集
   pushTarget()
   const handlers = vm.$options[hook]
   const info = `${hook} hook`

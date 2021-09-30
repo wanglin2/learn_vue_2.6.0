@@ -12,58 +12,39 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 
 let uid = 0
 
+// 给vue原型添加_init方法
 export function initMixin (Vue) {
   Vue.prototype._init = function (options) {
     const vm = this
-    // a uid
+    // 一个uid
     vm._uid = uid++
-
-    let startTag, endTag
-    /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
-      startTag = `vue-perf-start:${vm._uid}`
-      endTag = `vue-perf-end:${vm._uid}`
-      mark(startTag)
-    }
-
-    // a flag to avoid this being observed
+    // 避免自身被观察的标志
     vm._isVue = true
-    // merge options
+    // 合并选项
     if (options && options._isComponent) {
-      // optimize internal component instantiation
-      // since dynamic options merging is pretty slow, and none of the
-      // internal component options needs special treatment.
+      // 优化内部组件实例化，因为动态选项合并非常慢，并且没有任何内部组件选项需要特殊处理。
       initInternalComponent(vm, options)
     } else {
+      // 合并选项
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
         vm
       )
     }
-    /* istanbul ignore else */
-    if (process.env.NODE_ENV !== 'production') {
-      initProxy(vm)
-    } else {
-      vm._renderProxy = vm
-    }
-    // expose real self
+    vm._renderProxy = vm
+    // 引用自己
     vm._self = vm
+
+    // 初始化
     initLifecycle(vm)
     initEvents(vm)
     initRender(vm)
     callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props
+    initInjections(vm) // 处理 injections 在 data/props 之前
     initState(vm)
-    initProvide(vm) // resolve provide after data/props
+    initProvide(vm) // 处理 provide 在 data/props 之后
     callHook(vm, 'created')
-
-    /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
-      vm._name = formatComponentName(vm, false)
-      mark(endTag)
-      measure(`vue ${vm._name} init`, startTag, endTag)
-    }
 
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
@@ -90,6 +71,12 @@ export function initInternalComponent (vm, options) {
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-08-24 19:04:44 
+ * @Desc: 处理构造函数的选项 
+ */
 export function resolveConstructorOptions (Ctor) {
   let options = Ctor.options
   if (Ctor.super) {

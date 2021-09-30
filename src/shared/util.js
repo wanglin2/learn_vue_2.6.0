@@ -43,7 +43,7 @@ export function isObject (obj) {
 }
 
 /**
- * Get the raw type string of a value, e.g., [object Object].
+ * 获取一个值的原始类型, e.g., [object Object].
  */
 const _toString = Object.prototype.toString
 
@@ -52,8 +52,7 @@ export function toRawType (value) {
 }
 
 /**
- * Strict object type check. Only returns true
- * for plain JavaScript objects.
+ * 严格的对象类型检查。仅对普通JavaScript对象返回true。
  */
 export function isPlainObject (obj) {
   return _toString.call(obj) === '[object Object]'
@@ -151,7 +150,7 @@ export function hasOwn (obj, key) {
 }
 
 /**
- * Create a cached version of a pure function.
+ * 为纯函数创建一个缓存版本
  */
 export function cached (fn) {
   const cache = Object.create(null)
@@ -162,7 +161,7 @@ export function cached (fn) {
 }
 
 /**
- * Camelize a hyphen-delimited string.
+ * 将连字符分隔的字符串转为驼峰式
  */
 const camelizeRE = /-(\w)/g
 export const camelize = cached((str) => {
@@ -177,7 +176,7 @@ export const capitalize = cached((str) => {
 })
 
 /**
- * Hyphenate a camelCase string.
+ * 将camelCase字符串转换成-连接的字符
  */
 const hyphenateRE = /\B([A-Z])/g
 export const hyphenate = cached((str) => {
@@ -185,11 +184,9 @@ export const hyphenate = cached((str) => {
 })
 
 /**
- * Simple bind polyfill for environments that do not support it,
- * e.g., PhantomJS 1.x. Technically, we don't need this anymore
- * since native bind is now performant enough in most browsers.
- * But removing it would mean breaking code that was able to run in
- * PhantomJS 1.x, so this must be kept for backward compatibility.
+ * 简单绑定polyfill，适用于不支持它的环境,
+ * e.g., PhantomJS 1.x. 从技术上讲，我们不再需要它，因为原生绑定在大多数浏览器中已经足够好了。
+ * 但删除它意味着破坏能够在PhantomJS 1.x中运行的代码，因此必须保留它以实现向后兼容性。
  */
 
 /* istanbul ignore next */
@@ -207,10 +204,22 @@ function polyfillBind (fn, ctx) {
   return boundFn
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 16:25:02 
+ * @Desc: 原生bind方法 
+ */
 function nativeBind (fn, ctx) {
   return fn.bind(ctx)
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 16:24:56 
+ * @Desc: bind方法 
+ */
 export const bind = Function.prototype.bind
   ? nativeBind
   : polyfillBind

@@ -3,6 +3,6 @@ const app = new Vue({
   el: '#app',
   template: `<h1>{{text}}</h1>`,
   data: {
-    text: 'hello2'
+    text: 'hello'
   }
 })

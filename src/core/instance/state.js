@@ -40,6 +40,12 @@ const sharedPropertyDefinition = {
   set: noop
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 16:01:44 
+ * @Desc: 代理，将对target的key属性访问，代理到target的sourceKey的key访问 
+ */
 export function proxy(target, sourceKey, key) {
   sharedPropertyDefinition.get = function proxyGetter() {
     return this[sourceKey][key]
@@ -50,8 +56,14 @@ export function proxy(target, sourceKey, key) {
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 14:46:28 
+ * @Desc: 初始化状态 
+ */
 export function initState(vm) {
-  vm._watchers = []
+  vm._watchers = []// 声明了一个存放watcher的数组
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
@@ -66,47 +78,31 @@ export function initState(vm) {
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 14:48:40 
+ * @Desc: 初始化props 
+ */
 function initProps(vm, propsOptions) {
+  // propsData：创建实例时传递 props。主要作用是方便测试，只用于 new 创建的实例中
   const propsData = vm.$options.propsData || {}
+  // 存储props
   const props = vm._props = {}
-  // cache prop keys so that future props updates can iterate using Array
-  // instead of dynamic object key enumeration.
+  // 缓存prop的key，这样在后面更新prop时可以通过遍历数组，而不是枚举动态对象的属性
   const keys = vm.$options._propKeys = []
   const isRoot = !vm.$parent
-  // root instance props should be converted
+  // 根实例的props需要被观察
   if (!isRoot) {
     toggleObserving(false)
   }
+  // 遍历所有prop
   for (const key in propsOptions) {
     keys.push(key)
+    // 校验props，返回其默认值
     const value = validateProp(key, propsOptions, propsData, vm)
-    /* istanbul ignore else */
-    if (process.env.NODE_ENV !== 'production') {
-      const hyphenatedKey = hyphenate(key)
-      if (isReservedAttribute(hyphenatedKey) ||
-        config.isReservedAttr(hyphenatedKey)) {
-        warn(
-          `"${hyphenatedKey}" is a reserved attribute and cannot be used as component prop.`,
-          vm
-        )
-      }
-      defineReactive(props, key, value, () => {
-        if (!isRoot && !isUpdatingChildComponent) {
-          warn(
-            `Avoid mutating a prop directly since the value will be ` +
-            `overwritten whenever the parent component re-renders. ` +
-            `Instead, use a data or computed property based on the prop's ` +
-            `value. Prop being mutated: "${key}"`,
-            vm
-          )
-        }
-      })
-    } else {
-      defineReactive(props, key, value)
-    }
-    // static props are already proxied on the component's prototype
-    // during Vue.extend(). We only need to proxy props defined at
-    // instantiation here.
+    defineReactive(props, key, value)
+    // 在Vue.extend（）期间，静态prop已在组件的原型上代理。我们只需要在这里代理实例化时定义的prop
     if (!(key in vm)) {
       proxy(vm, `_props`, key)
     }
@@ -173,57 +169,51 @@ const computedWatcherOptions = {
   lazy: true
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 16:32:04 
+ * @Desc: 初始化计算属性 
+ */
 function initComputed(vm, computed) {
-  // $flow-disable-line
+  // 保存用于计算属性的watcher
   const watchers = vm._computedWatchers = Object.create(null)
-  // computed properties are just getters during SSR
-  const isSSR = isServerRendering()
 
   for (const key in computed) {
+    // 计算属性支持两种写法：普通函数、对象形式：{ get: Function, set: Function }
     const userDef = computed[key]
     const getter = typeof userDef === 'function' ? userDef : userDef.get
-    if (process.env.NODE_ENV !== 'production' && getter == null) {
-      warn(
-        `Getter is missing for computed property "${key}".`,
-        vm
-      )
-    }
 
-    if (!isSSR) {
-      // create internal watcher for the computed property.
-      watchers[key] = new Watcher(
-        vm,
-        getter || noop,
-        noop,
-        computedWatcherOptions
-      )
-    }
+    // 创建一个内部的 watcher 
+    watchers[key] = new Watcher(
+      vm,
+      getter || noop,
+      noop,
+      {
+        lazy: true
+      }
+    )
 
-    // component-defined computed properties are already defined on the
-    // component prototype. We only need to define computed properties defined
-    // at instantiation here.
+    // 组件定义的计算属性已在组件原型上定义。我们只需要在这里定义实例化时定义的计算属性。
     if (!(key in vm)) {
       defineComputed(vm, key, userDef)
-    } else if (process.env.NODE_ENV !== 'production') {
-      if (key in vm.$data) {
-        warn(`The computed property "${key}" is already defined in data.`, vm)
-      } else if (vm.$options.props && key in vm.$options.props) {
-        warn(`The computed property "${key}" is already defined as a prop.`, vm)
-      }
     }
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 16:47:02 
+ * @Desc: 定义计算属性 
+ */
 export function defineComputed(
   target,
   key,
   userDef
 ) {
-  const shouldCache = !isServerRendering()
   if (typeof userDef === 'function') {
-    sharedPropertyDefinition.get = shouldCache ?
-      createComputedGetter(key) :
-      createGetterInvoker(userDef)
+    sharedPropertyDefinition.get = createComputedGetter(key)
     sharedPropertyDefinition.set = noop
   } else {
     sharedPropertyDefinition.get = userDef.get ?
@@ -266,34 +256,24 @@ function createGetterInvoker(fn) {
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 16:20:35 
+ * @Desc: 初始化方法 
+ */
 function initMethods(vm, methods) {
-  const props = vm.$options.props
   for (const key in methods) {
-    if (process.env.NODE_ENV !== 'production') {
-      if (typeof methods[key] !== 'function') {
-        warn(
-          `Method "${key}" has type "${typeof methods[key]}" in the component definition. ` +
-          `Did you reference the function correctly?`,
-          vm
-        )
-      }
-      if (props && hasOwn(props, key)) {
-        warn(
-          `Method "${key}" has already been defined as a prop.`,
-          vm
-        )
-      }
-      if ((key in vm) && isReserved(key)) {
-        warn(
-          `Method "${key}" conflicts with an existing Vue instance method. ` +
-          `Avoid defining component methods that start with _ or $.`
-        )
-      }
-    }
     vm[key] = typeof methods[key] !== 'function' ? noop : bind(methods[key], vm)
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 16:51:26 
+ * @Desc: 初始化watch 
+ */
 function initWatch(vm, watch) {
   for (const key in watch) {
     const handler = watch[key]

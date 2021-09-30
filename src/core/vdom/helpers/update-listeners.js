@@ -11,10 +11,16 @@ import {
   isPlainObject
 } from '../../../shared/util'
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 10:55:42 
+ * @Desc: 序列化事件 
+ */
 const normalizeEvent = cached((name) => {
   const passive = name.charAt(0) === '&'
   name = passive ? name.slice(1) : name
-  const once = name.charAt(0) === '~' // Prefixed last, checked first
+  const once = name.charAt(0) === '~' // Prefixed last, checked first最后加前缀，首先选中
   name = once ? name.slice(1) : name
   const capture = name.charAt(0) === '!'
   name = capture ? name.slice(1) : name
@@ -43,6 +49,12 @@ export function createFnInvoker (fns, vm) {
   return invoker
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 10:53:01 
+ * @Desc: 更新事件监听器 
+ */
 export function updateListeners (
   on,
   oldOn,
@@ -51,22 +63,14 @@ export function updateListeners (
   createOnceHandler,
   vm
 ) {
-  let name, def, cur, old, event
+  let name, cur, old, event
+  // 遍历新的事件对象
   for (name in on) {
-    def = cur = on[name]
+    cur = on[name]
     old = oldOn[name]
-    event = normalizeEvent(name)
-    /* istanbul ignore if */
-    if (__WEEX__ && isPlainObject(def)) {
-      cur = def.handler
-      event.params = def.params
-    }
-    if (isUndef(cur)) {
-      process.env.NODE_ENV !== 'production' && warn(
-        `Invalid handler for event "${event.name}": got ` + String(cur),
-        vm
-      )
-    } else if (isUndef(old)) {
+    event = normalizeEvent(name)// 序列化事件
+    debugger
+    if (isUndef(old)) {// 原来没有该事件
       if (isUndef(cur.fns)) {
         cur = on[name] = createFnInvoker(cur, vm)
       }

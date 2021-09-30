@@ -16,7 +16,7 @@ export const isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA)) || (weexPlatform ==
 export const isChrome = UA && /chrome\/\d+/.test(UA) && !isEdge
 export const isPhantomJS = UA && /phantomjs/.test(UA)
 
-// Firefox has a "watch" function on Object.prototype...
+// Firefox的Object.prototype对象有一个"watch"函数...
 export const nativeWatch = ({}).watch
 
 export let supportsPassive = false

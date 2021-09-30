@@ -9,10 +9,17 @@ import {
 } from '../util/index'
 import { updateListeners } from '../vdom/helpers/index'
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 10:46:04 
+ * @Desc: 初始化事件 
+ */
 export function initEvents (vm) {
+  // 创建了一个保存事件的对象
   vm._events = Object.create(null)
   vm._hasHookEvent = false
-  // init parent attached events
+  // 初始化父附加事件
   const listeners = vm.$options._parentListeners
   if (listeners) {
     updateComponentListeners(vm, listeners)
@@ -39,6 +46,12 @@ function createOnceHandler (event, fn) {
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-09-29 10:51:25 
+ * @Desc: 更新组件事件监听器 
+ */
 export function updateComponentListeners (
   vm,
   listeners,
