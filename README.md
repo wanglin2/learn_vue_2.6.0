@@ -1,4 +1,4 @@
-Vue2.6.1源码阅读序列
+Vue2.6.1源码阅读系列文章
 
 # 调试
 
@@ -22,5 +22,7 @@ http://【你的ip:端口】/examples/index.html
 
 启动服务
 
+```bash
 docsify serve ./docs
+```
 
