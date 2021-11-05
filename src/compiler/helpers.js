@@ -9,6 +9,7 @@ export function baseWarn (msg, range) {
 }
 /* eslint-enable no-unused-vars */
 
+// 取出模块中指定的属性值
 export function pluckModuleFunction (
   modules,
   key
@@ -175,9 +176,11 @@ export function getBindingAttr (
 }
 
 // note: this only removes the attr from the Array (attrsList) so that it
+// 注意：这只会从数组（attrsList）中删除attr，这样它就不会被processattr处理。
 // doesn't get processed by processAttrs.
 // By default it does NOT remove it from the map (attrsMap) because the map is
 // needed during codegen.
+// 默认情况下，它不会将其从映射（attrsMap）中删除，因为在codegen期间需要映射。
 export function getAndRemoveAttr (
   el,
   name,

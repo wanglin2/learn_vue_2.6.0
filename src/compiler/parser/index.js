@@ -73,13 +73,14 @@ export function createASTElement (
 
 /**
  * Convert HTML string to AST.
+ * 将HTML字符串转换为AST。
  */
 export function parse (
   template,
   options
 ) {
   warn = options.warn || baseWarn
-
+  console.log(options)
   platformIsPreTag = options.isPreTag || no
   platformMustUseProp = options.mustUseProp || no
   platformGetTagNamespace = options.getTagNamespace || no

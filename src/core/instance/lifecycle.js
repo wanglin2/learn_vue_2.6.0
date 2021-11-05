@@ -192,7 +192,6 @@ export function mountComponent (
     }
   }, true /* isRenderWatcher */)
   hydrating = false
-  debugger
   // manually mounted instance, call mounted on self
   // 手动挂载实例
   // mounted is called for render-created child components in its inserted hook

@@ -145,22 +145,23 @@ export default class Watcher {
 
   /**
    * Scheduler job interface.
+   * 调度程序作业接口
    * Will be called by the scheduler.
+   * 将由调度程序调用
    */
   run () {
     if (this.active) {
       const value = this.get()
       if (
         value !== this.value ||
-        // Deep watchers and watchers on Object/Arrays should fire even
-        // when the value is the same, because the value may
-        // have mutated.
+        // 即使值相同，深度的watcher和对象/数组上的watcher也应该触发，因为值可能已经发生了变化。
         isObject(value) ||
         this.deep
       ) {
-        // set new value
+        // 设置为新值
         const oldValue = this.value
         this.value = value
+        // 用户的watcher，即通过$watch方法或watch选项设置的
         if (this.user) {
           try {
             this.cb.call(this.vm, value, oldValue)

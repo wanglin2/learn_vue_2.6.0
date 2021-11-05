@@ -51,8 +51,8 @@ Vue.prototype.$mount = function (
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,
         shouldDecodeNewlinesForHref,
-        delimiters: options.delimiters,
-        comments: options.comments
+        delimiters: options.delimiters,// 改变纯文本插入分隔符，默认为['{{', '}}']，你可以改成比如['${', '}']
+        comments: options.comments// 当设为 true 时，将会保留且渲染模板中的 HTML 注释。默认行为是舍弃它们
       }, this)
       options.render = render
       options.staticRenderFns = staticRenderFns

@@ -102,6 +102,7 @@ export function toNumber (val){
 /**
  * Make a map and return a function for checking if a key
  * is in that map.
+ * 制作一个映射并返回一个函数，用于检查该映射中是否有键。
  */
 export function makeMap (
   str,
@@ -265,13 +266,16 @@ export function toObject (arr) {
 
 /**
  * Perform no operation.
+ * 不执行任何操作。
  * Stubbing args to make Flow happy without leaving useless transpiled code
  * with ...rest (https://flow.org/blog/2017/05/07/Strict-Function-Call-Arity/).
+ * stubing args可以使流变得愉快，而不会留下无用的传输代码和…rest
  */
 export function noop (a, b, c) {}
 
 /**
  * Always return false.
+ * 一个返回false的函数
  */
 export const no = (a, b, c) => false
 
