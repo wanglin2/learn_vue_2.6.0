@@ -23,7 +23,6 @@ import { isUpdatingChildComponent } from './lifecycle'
  * @Desc: 初始化渲染 
  */
 export function initRender (vm) {
-  debugger
   vm._vnode = null // 子树的根节点
   vm._staticTrees = null // v-once 缓存树
   const options = vm.$options

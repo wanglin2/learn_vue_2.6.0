@@ -110,50 +110,42 @@ function initProps(vm, propsOptions) {
   toggleObserving(true)
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-11-02 19:47:09 
+ * @Desc:  初始化data
+ */
 function initData(vm) {
   let data = vm.$options.data
   data = vm._data = typeof data === 'function' ?
     getData(data, vm) :
     data || {}
+  // 检查是否是普通对象，不是则重置为空对象
   if (!isPlainObject(data)) {
     data = {}
-    process.env.NODE_ENV !== 'production' && warn(
-      'data functions should return an object:\n' +
-      'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
-      vm
-    )
   }
-  // proxy data on instance
+  // 代理data到实例上
   const keys = Object.keys(data)
-  const props = vm.$options.props
-  const methods = vm.$options.methods
   let i = keys.length
   while (i--) {
     const key = keys[i]
-    if (process.env.NODE_ENV !== 'production') {
-      if (methods && hasOwn(methods, key)) {
-        warn(
-          `Method "${key}" has already been defined as a data property.`,
-          vm
-        )
-      }
-    }
-    if (props && hasOwn(props, key)) {
-      process.env.NODE_ENV !== 'production' && warn(
-        `The data property "${key}" is already declared as a prop. ` +
-        `Use prop default value instead.`,
-        vm
-      )
-    } else if (!isReserved(key)) {
+    if (!isReserved(key)) {
       proxy(vm, `_data`, key)
     }
   }
-  // observe data
+  // 观察data
   observe(data, true /* asRootData */ )
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-11-02 19:55:27 
+ * @Desc: 获取data选项的值 
+ */
 export function getData(data, vm) {
-  // #7573 disable dep collection when invoking data getters
+  // #7573 当执行data的getter时禁止依赖收集
   pushTarget()
   try {
     return data.call(vm, vm)

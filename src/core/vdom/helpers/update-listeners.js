@@ -69,7 +69,6 @@ export function updateListeners (
     cur = on[name]
     old = oldOn[name]
     event = normalizeEvent(name)// 序列化事件
-    debugger
     if (isUndef(old)) {// 原来没有该事件
       if (isUndef(cur.fns)) {
         cur = on[name] = createFnInvoker(cur, vm)

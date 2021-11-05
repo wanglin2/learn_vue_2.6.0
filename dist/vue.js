@@ -1091,7 +1091,6 @@
       return val
     }
     var ob = (target).__ob__;
-    debugger
     if (target._isVue || (ob && ob.vmCount)) {
       warn(
         'Avoid adding reactive properties to a Vue instance or its root $data ' +

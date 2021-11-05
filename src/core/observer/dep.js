@@ -6,8 +6,7 @@ import config from '../config'
 let uid = 0
 
 /**
- * A dep is an observable that can have multiple
- * directives subscribing to it.
+ * dep是一个可观察对象，可以有多个指令订阅它。
  */
 export default class Dep {
   static target;
@@ -19,29 +18,47 @@ export default class Dep {
     this.subs = []
   }
 
+  /** 
+   * javascript comment 
+   * @Author: 王林25 
+   * @Date: 2021-11-04 15:54:59 
+   * @Desc: 添加订阅者 
+   */
   addSub (sub) {
     this.subs.push(sub)
   }
 
+  /** 
+   * javascript comment 
+   * @Author: 王林25 
+   * @Date: 2021-11-04 15:55:06 
+   * @Desc: 删除订阅者 
+   */
   removeSub (sub) {
     remove(this.subs, sub)
   }
 
+  /** 
+   * javascript comment 
+   * @Author: 王林25 
+   * @Date: 2021-11-04 15:56:33 
+   * @Desc:  订阅者添加该dep实例
+   */
   depend () {
     if (Dep.target) {
       Dep.target.addDep(this)
     }
   }
 
+  /** 
+   * javascript comment 
+   * @Author: 王林25 
+   * @Date: 2021-11-04 15:59:00 
+   * @Desc: 通知订阅者更新 
+   */
   notify () {
-    // stabilize the subscriber list first
+    // 只通知此刻存在的订阅者
     const subs = this.subs.slice()
-    if (process.env.NODE_ENV !== 'production' && !config.async) {
-      // subs aren't sorted in scheduler if not running async
-      // we need to sort them now to make sure they fire in correct
-      // order
-      subs.sort((a, b) => a.id - b.id)
-    }
     for (let i = 0, l = subs.length; i < l; i++) {
       subs[i].update()
     }

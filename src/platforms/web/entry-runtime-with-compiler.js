@@ -30,6 +30,7 @@ Vue.prototype.$mount = function (
   const options = this.$options
   // 解析 template/el，编译成渲染函数
   if (!options.render) {
+    // 分情况获取模板
     let template = options.template
     if (template) {
       if (typeof template === 'string') {
@@ -45,6 +46,7 @@ Vue.prototype.$mount = function (
       template = getOuterHTML(el)
     }
     if (template) {
+      // 编译模板为渲染函数
       const { render, staticRenderFns } = compileToFunctions(template, {
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,

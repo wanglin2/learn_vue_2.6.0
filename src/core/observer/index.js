@@ -30,22 +30,24 @@ export function toggleObserving(value) {
 }
 
 /**
- * Observer class that is attached to each observed
- * object. Once attached, the observer converts the target
- * object's property keys into getter/setters that
- * collect dependencies and dispatch updates.
+ * 附加到每个观察对象的观察者类，一旦观察成功，那么会把目标对象的属性key转换成getter/setter的形式，用于收集依赖和派发更新。
  */
 export class Observer {
   value;
   dep;
-  vmCount; // number of vms that have this object as root $data
+  vmCount; // 使用该对象作为根数据的vm数量
 
   constructor(value) {
+    // 目标对象
     this.value = value
+    // 实例化一个依赖收集对象
     this.dep = new Dep()
+    // vm数量
     this.vmCount = 0
+    // 给目标对象添加一个被观察过了的标志
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
+      // 如果浏览器支持使用__proto__属性
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -58,9 +60,7 @@ export class Observer {
   }
 
   /**
-   * Walk through all properties and convert them into
-   * getter/setters. This method should only be called when
-   * value type is Object.
+   * 遍历所有属性，将它们转换成getter/setters，只有在值是对象时才调用该方法
    */
   walk(obj) {
     const keys = Object.keys(obj)
@@ -70,7 +70,7 @@ export class Observer {
   }
 
   /**
-   * Observe a list of Array items.
+   * 观察数组项的列表项
    */
   observeArray(items ) {
     for (let i = 0, l = items.length; i < l; i++) {
@@ -79,23 +79,18 @@ export class Observer {
   }
 }
 
-// helpers
+// 工具函数
 
 /**
- * Augment a target Object or Array by intercepting
- * the prototype chain using __proto__
+ * 通过使用__proto__拦截原型链来扩充目标对象或数组
  */
 function protoAugment(target, src) {
-  /* eslint-disable no-proto */
   target.__proto__ = src
-  /* eslint-enable no-proto */
 }
 
 /**
- * Augment a target Object or Array by defining
- * hidden properties.
+ * 通过定义隐藏属性来扩充目标对象或数组。
  */
-/* istanbul ignore next */
 function copyAugment(target, src, keys ) {
   for (let i = 0, l = keys.length; i < l; i++) {
     const key = keys[i]
@@ -104,26 +99,26 @@ function copyAugment(target, src, keys ) {
 }
 
 /**
- * Attempt to create an observer instance for a value,
- * returns the new observer if successfully observed,
- * or the existing observer if the value already has one.
+ * 尝试给一个值创建一个观察者实例，如果观察成功，则返回新的观察者，或者返回现有的观察者（如果该值已经观察过）
  */
 export function observe(value, asRootData) {
+  // 如果不是对象或者是虚拟dom对象则返回
   if (!isObject(value) || value instanceof VNode) {
     return
   }
   let ob
+  // 存在__ob__属性则代表该对象之前已经观察过了
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
-    shouldObserve &&
-    !isServerRendering() &&
-    (Array.isArray(value) || isPlainObject(value)) &&
-    Object.isExtensible(value) &&
-    !value._isVue
+    shouldObserve &&// 当前允许进行观察
+    (Array.isArray(value) || isPlainObject(value)) &&// 只允许对数组和简单对象进行观察
+    Object.isExtensible(value) &&// 并且该对象是可开展的，即可以给它添加新属性
+    !value._isVue// 最后它不能是Vue实例
   ) {
     ob = new Observer(value)
   }
+  // 统计有多少个Vue实例对象将该对象作为根数据
   if (asRootData && ob) {
     ob.vmCount++
   }
@@ -160,15 +155,21 @@ export function defineReactive(
   }
   // 如果该属性的值又是一个对象或数组，那么也需要递归进行观察
   let childOb = !shallow && observe(val)
+  // 定义get和set
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter() {
+      console.log('get',key)
       const value = getter ? getter.call(obj) : val
+      // 依赖收集
       if (Dep.target) {
+        // 该属性的依赖收集
         dep.depend()
         if (childOb) {
+          // 对属性值的observer实例的dep也进行依赖收集
           childOb.dep.depend()
+          // 值为数组的话遍历数组项进行依赖收集
           if (Array.isArray(value)) {
             dependArray(value)
           }
@@ -177,19 +178,22 @@ export function defineReactive(
       return value
     },
     set: function reactiveSetter(newVal) {
+      console.log('set',key)
       const value = getter ? getter.call(obj) : val
-      /* eslint-disable no-self-compare */
+      // 值没有变化则直接返回
       if (newVal === value || (newVal !== newVal && value !== value)) {
         return
       }
-      // #7981: for accessor properties without setter
+      // #7981: 对于不带setter的访问器属性
       if (getter && !setter) return
       if (setter) {
         setter.call(obj, newVal)
       } else {
         val = newVal
       }
+      // 观察新的值
       childOb = !shallow && observe(newVal)
+      // 触发更新
       dep.notify()
     }
   })
@@ -271,8 +275,10 @@ export function del(target, key) {
 /**
  * Collect dependencies on array elements when the array is touched, since
  * we cannot intercept array element access like property getters.
+ * 在接触数组时收集对数组元素的依赖关系，因为我们不能像属性获取程序那样拦截数组元素访问。
  */
-function dependArray(value ) {
+function dependArray(value) {
+  console.log('dependArray函数已注释')
   for (let e, i = 0, l = value.length; i < l; i++) {
     e = value[i]
     e && e.__ob__ && e.__ob__.dep.depend()

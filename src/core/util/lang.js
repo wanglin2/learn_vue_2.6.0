@@ -16,7 +16,7 @@ export function isReserved (str) {
 }
 
 /**
- * Define a property.
+ * 定义一个属性
  */
 export function def (obj, key, val, enumerable) {
   Object.defineProperty(obj, key, {
@@ -28,7 +28,7 @@ export function def (obj, key, val, enumerable) {
 }
 
 /**
- * Parse simple path.
+ * 解析简单的路径
  */
 const bailRE = new RegExp(`[^${unicodeLetters}.$_\\d]`)
 export function parsePath (path) {

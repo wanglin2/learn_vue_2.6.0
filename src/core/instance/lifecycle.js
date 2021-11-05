@@ -160,6 +160,12 @@ export function lifecycleMixin (Vue) {
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-11-04 13:46:08 
+ * @Desc: 挂载组件 
+ */
 export function mountComponent (
   vm,
   el,
@@ -168,54 +174,16 @@ export function mountComponent (
   vm.$el = el
   if (!vm.$options.render) {
     vm.$options.render = createEmptyVNode
-    if (process.env.NODE_ENV !== 'production') {
-      /* istanbul ignore if */
-      if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||
-        vm.$options.el || el) {
-        warn(
-          'You are using the runtime-only build of Vue where the template ' +
-          'compiler is not available. Either pre-compile the templates into ' +
-          'render functions, or use the compiler-included build.',
-          vm
-        )
-      } else {
-        warn(
-          'Failed to mount component: template or render function not defined.',
-          vm
-        )
-      }
-    }
   }
   callHook(vm, 'beforeMount')
 
-  let updateComponent
-  /* istanbul ignore if */
-  if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
-    updateComponent = () => {
-      const name = vm._name
-      const id = vm._uid
-      const startTag = `vue-perf-start:${id}`
-      const endTag = `vue-perf-end:${id}`
-
-      mark(startTag)
-      const vnode = vm._render()
-      mark(endTag)
-      measure(`vue ${name} render`, startTag, endTag)
-
-      mark(startTag)
-      vm._update(vnode, hydrating)
-      mark(endTag)
-      measure(`vue ${name} patch`, startTag, endTag)
-    }
-  } else {
-    updateComponent = () => {
-      vm._update(vm._render(), hydrating)
-    }
+  // 更新组件的方法
+  let updateComponent = () => {
+    // 执行渲染函数产出VNode，然后调用_update方法进行打补丁
+    vm._update(vm._render(), hydrating)
   }
 
-  // we set this to vm._watcher inside the watcher's constructor
-  // since the watcher's initial patch may call $forceUpdate (e.g. inside child
-  // component's mounted hook), which relies on vm._watcher being already defined
+  // 我们把Watcher实例设置为vm._watcher属性值这个逻辑放在watcher的构造函数中，因为watcher的初始补丁可能调用$forceUpdate（例如，在子组件的挂载钩子中），这需要依赖于vm._watcher先被定义
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {
@@ -224,8 +192,9 @@ export function mountComponent (
     }
   }, true /* isRenderWatcher */)
   hydrating = false
-
+  debugger
   // manually mounted instance, call mounted on self
+  // 手动挂载实例
   // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
     vm._isMounted = true

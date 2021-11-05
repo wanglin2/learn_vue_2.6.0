@@ -43,6 +43,12 @@ export default class VNode {
   }
 }
 
+/** 
+ * javascript comment 
+ * @Author: 王林25 
+ * @Date: 2021-11-04 13:47:20 
+ * @Desc: 创建一个空的虚拟节点 
+ */
 export const createEmptyVNode = (text) => {
   const node = new VNode()
   node.text = text

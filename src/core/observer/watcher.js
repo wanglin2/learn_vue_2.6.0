@@ -17,9 +17,7 @@ import Dep, { pushTarget, popTarget } from './dep'
 let uid = 0
 
 /**
- * A watcher parses an expression, collects dependencies,
- * and fires callback when the expression value changes.
- * This is used for both the $watch() api and directives.
+ * watcher做的事情主要是解析表达式、依赖收集、并在表达式的值发生改变时触发回调。用于$watch方法和指令。
  */
 export default class Watcher {
   constructor (
@@ -30,6 +28,7 @@ export default class Watcher {
     isRenderWatcher
   ) {
     this.vm = vm
+    // 如果是渲染watcher，那么会将该Watcher实例添加到Vue实例的_watcher属性中
     if (isRenderWatcher) {
       vm._watcher = this
     }
@@ -45,38 +44,31 @@ export default class Watcher {
       this.deep = this.user = this.lazy = this.sync = false
     }
     this.cb = cb
-    this.id = ++uid // uid for batching
+    this.id = ++uid // 用于批处理的uid
     this.active = true
-    this.dirty = this.lazy // for lazy watchers
+    this.dirty = this.lazy // lazy watchers
     this.deps = []
     this.newDeps = []
     this.depIds = new Set()
     this.newDepIds = new Set()
-    this.expression = process.env.NODE_ENV !== 'production'
-      ? expOrFn.toString()
-      : ''
-    // parse expression for getter
+    this.expression = ''
+    // 从表达式中解析出getter
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
     } else {
       this.getter = parsePath(expOrFn)
       if (!this.getter) {
         this.getter = noop
-        process.env.NODE_ENV !== 'production' && warn(
-          `Failed watching path: "${expOrFn}" ` +
-          'Watcher only accepts simple dot-delimited paths. ' +
-          'For full control, use a function instead.',
-          vm
-        )
       }
     }
+    // 执行取值方法，计算当前的值
     this.value = this.lazy
       ? undefined
       : this.get()
   }
 
   /**
-   * Evaluate the getter, and re-collect dependencies.
+   * 计算getter，并重新收集依赖项
    */
   get () {
     pushTarget(this)
@@ -91,8 +83,7 @@ export default class Watcher {
         throw e
       }
     } finally {
-      // "touch" every property so they are all tracked as
-      // dependencies for deep watching
+      // "touch"每个属性，以便它们都作为依赖项进行跟踪，以便进行深入观察
       if (this.deep) {
         traverse(value)
       }
@@ -103,7 +94,7 @@ export default class Watcher {
   }
 
   /**
-   * Add a dependency to this directive.
+   * 将依赖项添加到该指令
    */
   addDep (dep) {
     const id = dep.id
@@ -117,10 +108,11 @@ export default class Watcher {
   }
 
   /**
-   * Clean up for dependency collection.
+   * 清理依赖项集合
    */
   cleanupDeps () {
     let i = this.deps.length
+    // 删除之前
     while (i--) {
       const dep = this.deps[i]
       if (!this.newDepIds.has(dep.id)) {
@@ -142,7 +134,6 @@ export default class Watcher {
    * Will be called when a dependency changes.
    */
   update () {
-    /* istanbul ignore else */
     if (this.lazy) {
       this.dirty = true
     } else if (this.sync) {

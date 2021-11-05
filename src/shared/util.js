@@ -34,9 +34,7 @@ export function isPrimitive (value) {
 }
 
 /**
- * Quick object check - this is primarily used to tell
- * Objects from primitive values when we know the value
- * is a JSON-compliant type.
+ * 快速检测是否是对象 - 这主要用于将对象与基本值区分开来当我们知道值是符合JSON的类型时。
  */
 export function isObject (obj) {
   return obj !== null && typeof obj === 'object'
@@ -130,7 +128,7 @@ export const isBuiltInTag = makeMap('slot,component', true)
 export const isReservedAttribute = makeMap('key,ref,slot,slot-scope,is')
 
 /**
- * Remove an item from an array.
+ * 从数组中删除指定项
  */
 export function remove (arr, item) {
   if (arr.length) {
@@ -142,7 +140,7 @@ export function remove (arr, item) {
 }
 
 /**
- * Check whether an object has the property.
+ * 检查一个对象是否存在某个属性
  */
 const hasOwnProperty = Object.prototype.hasOwnProperty
 export function hasOwn (obj, key) {
