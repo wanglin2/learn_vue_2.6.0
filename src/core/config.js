@@ -59,6 +59,7 @@ export default ({
   /**
    * Check if a tag is reserved so that it cannot be registered as a
    * component. This is platform-dependent and may be overwritten.
+   * 检查一个标签是否保留标签，是的话其无法注册为组件。这取决于平台，可能会被覆盖。
    */
   isReservedTag: no,
 
@@ -81,6 +82,7 @@ export default ({
 
   /**
    * Parse the real tag name for the specific platform.
+   * 解析特定平台的真实标记名。
    */
   parsePlatformTagName: identity,
 

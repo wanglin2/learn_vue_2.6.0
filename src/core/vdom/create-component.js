@@ -33,6 +33,7 @@ import {
 } from '../../platforms/weex/runtime/recycle-list/render-component-template'
 
 // inline hooks to be invoked on component VNodes during patch
+// 在修补期间在组件VNode上调用的内联钩子
 const componentVNodeHooks = {
   init (vnode, hydrating) {
     if (
@@ -112,20 +113,20 @@ export function createComponent (
   const baseCtor = context.$options._base
 
   // plain options object: turn it into a constructor
+  // 普通选项对象：将其转换为构造函数
   if (isObject(Ctor)) {
     Ctor = baseCtor.extend(Ctor)
   }
 
   // if at this stage it's not a constructor or an async component factory,
   // reject.
+  // 如果在此阶段它不是构造函数或异步组件工厂，请拒绝。
   if (typeof Ctor !== 'function') {
-    if (process.env.NODE_ENV !== 'production') {
-      warn(`Invalid Component definition: ${String(Ctor)}`, context)
-    }
     return
   }
 
   // async component
+  // 异步组件
   let asyncFactory
   if (isUndef(Ctor.cid)) {
     asyncFactory = Ctor
@@ -148,33 +149,39 @@ export function createComponent (
 
   // resolve constructor options in case global mixins are applied after
   // component constructor creation
+  // 在组件构造函数创建后才应用全局混合的这种情况下解析构造函数选项
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
+  // 把组件的v-model转换成props和events
   if (isDef(data.model)) {
     transformModel(Ctor.options, data)
   }
 
   // extract props
+  // 提取props
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
   // functional component
+  // 函数式组件
   if (isTrue(Ctor.options.functional)) {
     return createFunctionalComponent(Ctor, propsData, data, context, children)
   }
 
   // extract listeners, since these needs to be treated as
   // child component listeners instead of DOM listeners
+  // 提取侦听器，因为这些侦听器需要被视为子组件侦听器，而不是DOM侦听器
   const listeners = data.on
   // replace with listeners with .native modifier
   // so it gets processed during parent component patch.
+  // 替换为带有.native修饰符的侦听器，以便在父组件修补程序期间对其进行处理。
   data.on = data.nativeOn
 
   if (isTrue(Ctor.options.abstract)) {
     // abstract components do not keep anything
     // other than props & listeners & slot
+    // 抽象组件只保留props、侦听器和插槽
 
-    // work around flow
     const slot = data.slot
     data = {}
     if (slot) {
@@ -183,9 +190,11 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 在占位节点上安装组件管理挂钩
   installComponentHooks(data)
 
   // return a placeholder vnode
+  // 处理一个占位vnode
   const name = Ctor.options.name || tag
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
@@ -193,14 +202,6 @@ export function createComponent (
     { Ctor, propsData, listeners, tag, children },
     asyncFactory
   )
-
-  // Weex specific: invoke recycle-list optimized @render function for
-  // extracting cell-slot template.
-  // https://github.com/Hanks10100/weex-native-directive/tree/master/component
-  /* istanbul ignore if */
-  if (__WEEX__ && isRecyclableComponent(vnode)) {
-    return renderRecyclableComponentTemplate(vnode)
-  }
 
   return vnode
 }

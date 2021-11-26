@@ -63,6 +63,7 @@ export function renderMixin (Vue) {
     const vm = this
     const { render, _parentVnode } = vm.$options
 
+    // 存在父VNode
     if (_parentVnode) {
       vm.$scopedSlots = normalizeScopedSlots(
         _parentVnode.data.scopedSlots,
@@ -72,41 +73,15 @@ export function renderMixin (Vue) {
 
     // set parent vnode. this allows render functions to have access
     // to the data on the placeholder node.
+    // 设置父vnode。这允许渲染函数访问占位符节点上的数据。
     vm.$vnode = _parentVnode
     // render self
-    let vnode
-    try {
-      vnode = render.call(vm._renderProxy, vm.$createElement)
-    } catch (e) {
-      handleError(e, vm, `render`)
-      // return error render result,
-      // or previous vnode to prevent render error causing blank component
-      /* istanbul ignore else */
-      if (process.env.NODE_ENV !== 'production' && vm.$options.renderError) {
-        try {
-          vnode = vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e)
-        } catch (e) {
-          handleError(e, vm, `renderError`)
-          vnode = vm._vnode
-        }
-      } else {
-        vnode = vm._vnode
-      }
-    }
+    // 执行render方法生成虚拟DOM
+    let vnode = render.call(vm._renderProxy, vm.$createElement)
     // if the returned array contains only a single node, allow it
+    // 如果返回的数组只包含一个节点，请允许它
     if (Array.isArray(vnode) && vnode.length === 1) {
       vnode = vnode[0]
-    }
-    // return empty vnode in case the render function errored out
-    if (!(vnode instanceof VNode)) {
-      if (process.env.NODE_ENV !== 'production' && Array.isArray(vnode)) {
-        warn(
-          'Multiple root nodes returned from render function. Render function ' +
-          'should return a single root node.',
-          vm
-        )
-      }
-      vnode = createEmptyVNode()
     }
     // set parent
     vnode.parent = _parentVnode

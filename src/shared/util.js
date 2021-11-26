@@ -22,6 +22,7 @@ export function isFalse (v) {
 
 /**
  * Check if value is primitive.
+ * 检查值是否为原始值。
  */
 export function isPrimitive (value) {
   return (

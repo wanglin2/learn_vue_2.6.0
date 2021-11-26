@@ -80,7 +80,6 @@ export function parse (
   options
 ) {
   warn = options.warn || baseWarn
-  console.log(options)
   platformIsPreTag = options.isPreTag || no
   platformMustUseProp = options.mustUseProp || no
   platformGetTagNamespace = options.getTagNamespace || no

@@ -78,14 +78,19 @@ export function initLifecycle (vm) {
  * @Desc: 添加_update方法， 
  */
 export function lifecycleMixin (Vue) {
+  // 更新
   Vue.prototype._update = function (vnode, hydrating) {
     const vm = this
     const prevEl = vm.$el
+    // 旧的vnode
     const prevVnode = vm._vnode
+    // 将该vm标记为当前活跃的实例
     const restoreActiveInstance = setActiveInstance(vm)
+    // 新生成的vnode
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
+    // Vue.prototype.__patch__ 是在入口处根据所使用的平台来注入的
     if (!prevVnode) {
       // 第一次渲染
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
@@ -95,6 +100,7 @@ export function lifecycleMixin (Vue) {
     }
     restoreActiveInstance()
     // update __vue__ reference
+    // 更新 __vue__ 引用
     if (prevEl) {
       prevEl.__vue__ = null
     }
@@ -102,11 +108,13 @@ export function lifecycleMixin (Vue) {
       vm.$el.__vue__ = vm
     }
     // if parent is an HOC, update its $el as well
+    // 如果父项是HOC（高阶组件），则也更新其$el
     if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
       vm.$parent.$el = vm.$el
     }
     // updated hook is called by the scheduler to ensure that children are
     // updated in a parent's updated hook.
+    // 调度程序调用更新的钩子，以确保在父级的更新钩子中更新子级。
   }
 
   Vue.prototype.$forceUpdate = function () {

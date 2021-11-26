@@ -85,10 +85,13 @@ export function resolveConstructorOptions (Ctor) {
     if (superOptions !== cachedSuperOptions) {
       // super option changed,
       // need to resolve new options.
+      // 父类选项改变了，需要解析新选项
       Ctor.superOptions = superOptions
       // check if there are any late-modified/attached options (#4976)
+      // 检查是否有任何延迟修改/附加选项（#4976）
       const modifiedOptions = resolveModifiedOptions(Ctor)
       // update base extend options
+      // 更新基本扩展选项
       if (modifiedOptions) {
         extend(Ctor.extendOptions, modifiedOptions)
       }

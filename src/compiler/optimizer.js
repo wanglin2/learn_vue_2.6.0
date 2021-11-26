@@ -23,7 +23,6 @@ const genStaticKeysCached = cached(genStaticKeys)
  *    在打补丁过程中完全跳过它们。
  */
 export function optimize (root, options) {
-  console.log(root)
   if (!root) return
   isStaticKey = genStaticKeysCached(options.staticKeys || '')
   // 判断是否是保留标签，比如html、svg标签
