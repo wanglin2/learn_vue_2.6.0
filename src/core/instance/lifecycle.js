@@ -188,6 +188,7 @@ export function mountComponent (
   // 更新组件的方法
   let updateComponent = () => {
     // 执行渲染函数产出VNode，然后调用_update方法进行打补丁
+    debugger
     vm._update(vm._render(), hydrating)
   }
 

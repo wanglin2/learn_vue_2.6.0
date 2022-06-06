@@ -34,7 +34,6 @@ export function createElement (
   normalizationType,
   alwaysNormalize
 ) {
-  debugger
   // 如果data选项是数组或原始值，那么认为它是子节点
   if (Array.isArray(data) || isPrimitive(data)) {
     normalizationType = children
